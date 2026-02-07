@@ -95,6 +95,7 @@ renderer_is_running = True
 # Low-Level Vector Math (operates on raw 3-tuples)
 # ---------------------------------------------------------------------------
 
+
 def rotate_vertex_around_x(
     vertex: tuple[float, float, float],
     angle_radians: float,
@@ -160,6 +161,7 @@ def project_vertex_to_screen(
 # Mesh Construction Helpers
 # ---------------------------------------------------------------------------
 
+
 def create_box_mesh(
     center_x: float,
     base_y: float,
@@ -186,9 +188,18 @@ def create_box_mesh(
         (center_x - half_w, base_y + height, center_z + half_d),
     ]
     edges = [
-        (0, 1), (1, 2), (2, 3), (3, 0),   # bottom
-        (4, 5), (5, 6), (6, 7), (7, 4),   # top
-        (0, 4), (1, 5), (2, 6), (3, 7),   # vertical pillars
+        (0, 1),
+        (1, 2),
+        (2, 3),
+        (3, 0),  # bottom
+        (4, 5),
+        (5, 6),
+        (6, 7),
+        (7, 4),  # top
+        (0, 4),
+        (1, 5),
+        (2, 6),
+        (3, 7),  # vertical pillars
     ]
     return {"vertices": vertices, "edges": edges, "color": color}
 
@@ -233,9 +244,12 @@ def create_prism_roof_mesh(
 
     vertices = base_verts + ridge_verts
     edges = [
-        (0, 1), (1, 2), (2, 3), (3, 0),  # base rectangle
-        *slope_edges,                       # slopes
-        (4, 5),                             # ridge line
+        (0, 1),
+        (1, 2),
+        (2, 3),
+        (3, 0),  # base rectangle
+        *slope_edges,  # slopes
+        (4, 5),  # ridge line
     ]
     return {"vertices": vertices, "edges": edges, "color": color}
 
@@ -243,6 +257,7 @@ def create_prism_roof_mesh(
 # ---------------------------------------------------------------------------
 # Composite Building Helpers (append directly to scene_objects)
 # ---------------------------------------------------------------------------
+
 
 def add_standard_house(
     position_x: float,
@@ -259,11 +274,17 @@ def add_standard_house(
     )
     front_z = position_z + 2.51
     # Door
-    scene_objects.append(create_box_mesh(position_x, 0, front_z, 1.0, 1.8, 0.1, "darkgreen"))
+    scene_objects.append(
+        create_box_mesh(position_x, 0, front_z, 1.0, 1.8, 0.1, "darkgreen")
+    )
     # Left window
-    scene_objects.append(create_box_mesh(position_x - 1.25, 0.5, front_z, 1.0, 1.0, 0.1, "lightblue"))
+    scene_objects.append(
+        create_box_mesh(position_x - 1.25, 0.5, front_z, 1.0, 1.0, 0.1, "lightblue")
+    )
     # Right window
-    scene_objects.append(create_box_mesh(position_x + 1.25, 0.5, front_z, 1.0, 1.0, 0.1, "lightblue"))
+    scene_objects.append(
+        create_box_mesh(position_x + 1.25, 0.5, front_z, 1.0, 1.0, 0.1, "lightblue")
+    )
 
 
 def add_shop_building(
@@ -282,12 +303,20 @@ def add_shop_building(
     )
     front_z = position_z + 3.0
     # Sign
-    scene_objects.append(create_box_mesh(position_x, 3.5, front_z, 4, 0.8, 0.1, "wheat"))
+    scene_objects.append(
+        create_box_mesh(position_x, 3.5, front_z, 4, 0.8, 0.1, "wheat")
+    )
     # Display windows
-    scene_objects.append(create_box_mesh(position_x - 2, 0.5, front_z + 0.01, 2.5, 2.0, 0.1, "cyan"))
-    scene_objects.append(create_box_mesh(position_x + 2, 0.5, front_z + 0.01, 2.5, 2.0, 0.1, "cyan"))
+    scene_objects.append(
+        create_box_mesh(position_x - 2, 0.5, front_z + 0.01, 2.5, 2.0, 0.1, "cyan")
+    )
+    scene_objects.append(
+        create_box_mesh(position_x + 2, 0.5, front_z + 0.01, 2.5, 2.0, 0.1, "cyan")
+    )
     # Door
-    scene_objects.append(create_box_mesh(position_x, 0, front_z + 0.01, 1.2, 2.2, 0.1, "black"))
+    scene_objects.append(
+        create_box_mesh(position_x, 0, front_z + 0.01, 1.2, 2.2, 0.1, "black")
+    )
 
 
 def add_tree(position_x: float, position_z: float) -> None:
@@ -296,13 +325,16 @@ def add_tree(position_x: float, position_z: float) -> None:
         create_box_mesh(position_x, 0, position_z, 0.5, 1.5, 0.5, "saddlebrown")
     )
     scene_objects.append(
-        create_prism_roof_mesh(position_x, 1.5, position_z, 2.5, 3, 2.5, "forestgreen", ridge_along_z=True)
+        create_prism_roof_mesh(
+            position_x, 1.5, position_z, 2.5, 3, 2.5, "forestgreen", ridge_along_z=True
+        )
     )
 
 
 # ---------------------------------------------------------------------------
 # Scene Assembly
 # ---------------------------------------------------------------------------
+
 
 def build_full_scene() -> None:
     """Populate *scene_objects* with every mesh in the suburban neighbourhood."""
@@ -319,7 +351,9 @@ def build_full_scene() -> None:
     # Garage
     scene_objects.append(create_box_mesh(4.25, 0, 0, 3.5, 2.0, 4.5, "saddlebrown"))
     scene_objects.append(create_prism_roof_mesh(4.25, 2.0, 0, 3.9, 1.0, 4.9, "darkred"))
-    scene_objects.append(create_box_mesh(4.25, 0, 2.26, 2.8, 1.8, 0.1, "white"))  # garage door
+    scene_objects.append(
+        create_box_mesh(4.25, 0, 2.26, 2.8, 1.8, 0.1, "white")
+    )  # garage door
 
     # --- Driveway and footpath --------------------------------------------
     scene_objects.append(create_box_mesh(4.25, 0.02, 5.25, 3.0, 0, 5.5, "gray"))
@@ -341,7 +375,9 @@ def build_full_scene() -> None:
     ]
     for house_x, wall_color, roof_color in neighbour_configs:
         add_standard_house(house_x, 15, wall_color, roof_color)
-        scene_objects.append(create_box_mesh(house_x, 0.02, 11.5, 1.2, 0, 3, "lightgray"))
+        scene_objects.append(
+            create_box_mesh(house_x, 0.02, 11.5, 1.2, 0, 3, "lightgray")
+        )
 
     # --- Shops ------------------------------------------------------------
     add_shop_building(-25, 8)
@@ -359,6 +395,7 @@ def build_full_scene() -> None:
 # ---------------------------------------------------------------------------
 # Turtle / Screen Setup
 # ---------------------------------------------------------------------------
+
 
 def setup_turtle_screen() -> None:
     """Initialise the turtle window and drawing pen."""
@@ -380,14 +417,24 @@ def setup_turtle_screen() -> None:
 # Input Binding
 # ---------------------------------------------------------------------------
 
+
 def bind_keyboard_controls() -> None:
     """Register all key press / release handlers on the display screen."""
     display_screen.listen()
 
     continuous_keys = [
-        "w", "s", "a", "d", "q", "e",
-        "Up", "Down", "Left", "Right",
-        "Page_Up", "Page_Down",
+        "w",
+        "s",
+        "a",
+        "d",
+        "q",
+        "e",
+        "Up",
+        "Down",
+        "Left",
+        "Right",
+        "Page_Up",
+        "Page_Down",
     ]
     for key_name in continuous_keys:
         # Closure trick: default argument captures current key_name
@@ -401,6 +448,7 @@ def bind_keyboard_controls() -> None:
 # ---------------------------------------------------------------------------
 # Camera Control
 # ---------------------------------------------------------------------------
+
 
 def reset_camera_to_defaults() -> None:
     """Set interpolation targets back to the default viewing angle."""
@@ -469,6 +517,7 @@ def interpolate_camera_toward_targets() -> None:
 # Drawing
 # ---------------------------------------------------------------------------
 
+
 def draw_edge_between_vertices(
     vertex_a: tuple[float, float, float],
     vertex_b: tuple[float, float, float],
@@ -482,8 +531,12 @@ def draw_edge_between_vertices(
     screen_bx, screen_by = project_vertex_to_screen(transformed_b)
 
     # Cull edges projected far off screen
-    if (abs(screen_ax) > OFF_SCREEN_LIMIT or abs(screen_ay) > OFF_SCREEN_LIMIT or
-            abs(screen_bx) > OFF_SCREEN_LIMIT or abs(screen_by) > OFF_SCREEN_LIMIT):
+    if (
+        abs(screen_ax) > OFF_SCREEN_LIMIT
+        or abs(screen_ay) > OFF_SCREEN_LIMIT
+        or abs(screen_bx) > OFF_SCREEN_LIMIT
+        or abs(screen_by) > OFF_SCREEN_LIMIT
+    ):
         return
 
     # Apply pan offset
@@ -525,8 +578,11 @@ def draw_all_scene_objects() -> None:
 # Heads-Up Display
 # ---------------------------------------------------------------------------
 
+
 def write_text_at(
-    x: float, y: float, text: str,
+    x: float,
+    y: float,
+    text: str,
     font: tuple = HUD_FONT_BODY,
 ) -> None:
     """Write a string at an absolute screen position."""
@@ -544,7 +600,9 @@ def draw_heads_up_display() -> None:
 
     write_text_at(col_x, row_y, "3D Rendered House", HUD_FONT_TITLE)
     row_y -= HUD_ROW_HEIGHT + 10
-    write_text_at(col_x, row_y, "Movement Controls (Hold for continuous):", HUD_FONT_HEADING)
+    write_text_at(
+        col_x, row_y, "Movement Controls (Hold for continuous):", HUD_FONT_HEADING
+    )
 
     control_hints = [
         "WASD: Rotate around X and Y axes",
@@ -580,6 +638,7 @@ def draw_heads_up_display() -> None:
 # Frame Rendering
 # ---------------------------------------------------------------------------
 
+
 def render_single_frame() -> None:
     """Execute one complete frame: input -> update -> draw -> flip."""
     apply_held_keys_to_targets()
@@ -593,6 +652,7 @@ def render_single_frame() -> None:
 # ---------------------------------------------------------------------------
 # Main Loop
 # ---------------------------------------------------------------------------
+
 
 def request_exit() -> None:
     """Signal the animation loop to stop."""
@@ -621,6 +681,7 @@ def run_animation_loop() -> None:
 # ---------------------------------------------------------------------------
 # Entry Point
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Print usage instructions, build the scene, and start the renderer."""

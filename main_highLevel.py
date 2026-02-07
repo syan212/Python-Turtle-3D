@@ -18,7 +18,7 @@ from __future__ import annotations
 import math
 import time
 import turtle
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import NamedTuple
 
@@ -66,8 +66,10 @@ HUD_FONT_BODY = ("Arial", 10, "normal")
 # Geometry Primitives
 # ---------------------------------------------------------------------------
 
+
 class ScreenPoint(NamedTuple):
     """A 2D point in screen-space pixel coordinates."""
+
     x: float
     y: float
 
@@ -139,8 +141,10 @@ class Vector3:
 # Scene Object
 # ---------------------------------------------------------------------------
 
+
 class RidgeAxis(Enum):
     """Determines which axis a triangular-prism ridge runs along."""
+
     X = auto()
     Z = auto()
 
@@ -157,6 +161,7 @@ class WireframeObject:
 # ---------------------------------------------------------------------------
 # Scene Builder — creates the suburban neighborhood
 # ---------------------------------------------------------------------------
+
 
 class SuburbanSceneBuilder:
     """Factory that constructs all 3D objects for the suburban scene."""
@@ -208,11 +213,20 @@ class SuburbanSceneBuilder:
 
         edges = [
             # Bottom face
-            (0, 1), (1, 2), (2, 3), (3, 0),
+            (0, 1),
+            (1, 2),
+            (2, 3),
+            (3, 0),
             # Top face
-            (4, 5), (5, 6), (6, 7), (7, 4),
+            (4, 5),
+            (5, 6),
+            (6, 7),
+            (7, 4),
             # Vertical pillars
-            (0, 4), (1, 5), (2, 6), (3, 7),
+            (0, 4),
+            (1, 5),
+            (2, 6),
+            (3, 7),
         ]
         self._objects.append(WireframeObject(vertices, edges, color))
 
@@ -254,7 +268,10 @@ class SuburbanSceneBuilder:
         vertices = base_vertices + ridge_vertices
         edges = [
             # Base rectangle
-            (0, 1), (1, 2), (2, 3), (3, 0),
+            (0, 1),
+            (1, 2),
+            (2, 3),
+            (3, 0),
             # Slopes
             *slope_edges,
             # Ridge line
@@ -307,8 +324,14 @@ class SuburbanSceneBuilder:
         """Add a simple tree: brown trunk box + green triangular canopy."""
         self._add_box(position_x, 0, position_z, 0.5, 1.5, 0.5, "saddlebrown")
         self._add_prism_roof(
-            position_x, 1.5, position_z, 2.5, 3, 2.5,
-            "forestgreen", ridge_axis=RidgeAxis.Z,
+            position_x,
+            1.5,
+            position_z,
+            2.5,
+            3,
+            2.5,
+            "forestgreen",
+            ridge_axis=RidgeAxis.Z,
         )
 
     # -- Scene composition -------------------------------------------------
@@ -337,8 +360,8 @@ class SuburbanSceneBuilder:
 
     def _build_streets(self) -> None:
         """Main road, cross street, and center-line markings."""
-        self._add_box(0, 0.01, 8, 100, 0, 4, "dimgray")      # Main street
-        self._add_box(-20, 0.01, 8, 4, 0, 40, "dimgray")      # Cross street
+        self._add_box(0, 0.01, 8, 100, 0, 4, "dimgray")  # Main street
+        self._add_box(-20, 0.01, 8, 4, 0, 40, "dimgray")  # Cross street
         for stripe_index in range(-15, 16):
             stripe_x = stripe_index * 5
             self._add_box(stripe_x, 0.02, 8, 2, 0, 0.2, "yellow")
@@ -363,7 +386,11 @@ class SuburbanSceneBuilder:
     def _build_trees(self) -> None:
         """Scatter trees around the neighborhood."""
         tree_positions = [
-            (-5, 5), (5, 5), (-12, 12), (12, 12), (-20, 10),
+            (-5, 5),
+            (5, 5),
+            (-12, 12),
+            (12, 12),
+            (-20, 10),
         ]
         for tree_x, tree_z in tree_positions:
             self._add_tree(tree_x, tree_z)
@@ -376,6 +403,7 @@ class SuburbanSceneBuilder:
 # ---------------------------------------------------------------------------
 # Camera — holds view state and interpolation targets
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class CameraState:
@@ -425,6 +453,7 @@ class CameraState:
 # Input Handler — maps held keys to camera target adjustments
 # ---------------------------------------------------------------------------
 
+
 class InputHandler:
     """Translates continuous keyboard input into camera target changes."""
 
@@ -438,9 +467,20 @@ class InputHandler:
         self._screen.listen()
 
         # Continuous-hold keys
-        continuous_keys = ["w", "s", "a", "d", "q", "e",
-                           "Up", "Down", "Left", "Right",
-                           "Page_Up", "Page_Down"]
+        continuous_keys = [
+            "w",
+            "s",
+            "a",
+            "d",
+            "q",
+            "e",
+            "Up",
+            "Down",
+            "Left",
+            "Right",
+            "Page_Up",
+            "Page_Down",
+        ]
         for key in continuous_keys:
             self._screen.onkeypress(self._make_press_handler(key), key)
             self._screen.onkeyrelease(self._make_release_handler(key), key)
@@ -496,6 +536,7 @@ class InputHandler:
 # Heads-Up Display — on-screen text overlay
 # ---------------------------------------------------------------------------
 
+
 class HeadsUpDisplay:
     """Renders control hints and camera telemetry on the turtle canvas."""
 
@@ -510,7 +551,10 @@ class HeadsUpDisplay:
     # -- Private -----------------------------------------------------------
 
     def _write_at(
-        self, x: float, y: float, text: str,
+        self,
+        x: float,
+        y: float,
+        text: str,
         font: tuple = HUD_FONT_BODY,
     ) -> None:
         self._pen.penup()
@@ -523,7 +567,9 @@ class HeadsUpDisplay:
         y = HUD_TOP_Y
         self._write_at(left, y, "3D Rendered House", HUD_FONT_TITLE)
         y -= HUD_LINE_SPACING + 10
-        self._write_at(left, y, "Movement Controls (Hold for continuous):", HUD_FONT_HEADING)
+        self._write_at(
+            left, y, "Movement Controls (Hold for continuous):", HUD_FONT_HEADING
+        )
         hints = [
             "WASD: Rotate around X and Y axes",
             "QE: Rotate around Z axis",
@@ -538,7 +584,9 @@ class HeadsUpDisplay:
             self._write_at(left, y, line)
 
     def _draw_camera_telemetry(
-        self, camera: CameraState, object_count: int,
+        self,
+        camera: CameraState,
+        object_count: int,
     ) -> None:
         right = HUD_RIGHT_X
         y = HUD_TOP_Y
@@ -558,6 +606,7 @@ class HeadsUpDisplay:
 # ---------------------------------------------------------------------------
 # Renderer — orchestrates the frame loop
 # ---------------------------------------------------------------------------
+
 
 class SuburbanSceneRenderer:
     """Top-level renderer that ties scene, camera, input, and drawing together."""
@@ -627,8 +676,9 @@ class SuburbanSceneRenderer:
 
         for wireframe_object in depth_sorted_objects:
             for start_index, end_index in wireframe_object.edges:
-                if start_index < len(wireframe_object.vertices) and \
-                   end_index < len(wireframe_object.vertices):
+                if start_index < len(wireframe_object.vertices) and end_index < len(
+                    wireframe_object.vertices
+                ):
                     self._draw_edge_3d(
                         wireframe_object.vertices[start_index],
                         wireframe_object.vertices[end_index],
@@ -657,10 +707,12 @@ class SuburbanSceneRenderer:
         screen_b = transformed_b.project_to_screen()
 
         # Cull edges that project far outside the visible area
-        if (abs(screen_a.x) > OFF_SCREEN_THRESHOLD or
-                abs(screen_a.y) > OFF_SCREEN_THRESHOLD or
-                abs(screen_b.x) > OFF_SCREEN_THRESHOLD or
-                abs(screen_b.y) > OFF_SCREEN_THRESHOLD):
+        if (
+            abs(screen_a.x) > OFF_SCREEN_THRESHOLD
+            or abs(screen_a.y) > OFF_SCREEN_THRESHOLD
+            or abs(screen_b.x) > OFF_SCREEN_THRESHOLD
+            or abs(screen_b.y) > OFF_SCREEN_THRESHOLD
+        ):
             return
 
         # Apply camera pan offset
@@ -687,6 +739,7 @@ class SuburbanSceneRenderer:
 # ---------------------------------------------------------------------------
 # Entry Point
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     """Print usage instructions and launch the interactive renderer."""
